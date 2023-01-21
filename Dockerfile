@@ -6,7 +6,7 @@
 ## the License.  You may obtain a copy of the License at
 ##
 ##     http://www.apache.org/licenses/LICENSE-2.0
-## 
+##
 ## Unless required by applicable law or agreed to in writing, software
 ## distributed under the License is distributed on an "AS IS" BASIS,
 ## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,8 +22,10 @@ ARG ALPINE_VERSION=3.15.0
 ARG JENA_VERSION=""
 
 # Internal, passed between stages.
-ARG FUSEKI_DIR=/fuseki-fulljar
-ARG FUSEKI_JAR=jena-fuseki-fulljar-${JENA_VERSION}.jar
+ARG FUSEKI_DIR=/fuseki
+# JAR Type can be fulljar or server
+ARG JAR_TYPE=fulljar
+ARG FUSEKI_JAR=jena-fuseki-${JAR_TYPE}-${JENA_VERSION}.jar
 ARG JAVA_MINIMAL=/opt/java-minimal
 
 ## ---- Stage: Download and build java.
@@ -34,7 +36,7 @@ ARG JENA_VERSION
 ARG FUSEKI_DIR
 ARG FUSEKI_JAR
 ARG REPO=https://repo1.maven.org/maven2
-ARG JAR_URL=${REPO}/org/apache/jena/jena-fuseki-server/${JENA_VERSION}/${FUSEKI_JAR}
+ARG JAR_URL=${REPO}/org/apache/jena/jena-fuseki-${JAR_TYPE}/${JENA_VERSION}/${FUSEKI_JAR}
 
 RUN [ "${JENA_VERSION}" != "" ] || { echo -e '\n**** Set JENA_VERSION ****\n' ; exit 1 ; }
 RUN echo && echo "==== Docker build for Apache Jena Fuseki ${JENA_VERSION} ====" && echo
@@ -99,7 +101,7 @@ RUN \
     mkdir -p $LOGS && \
     mkdir -p $DATA && \
     chown -R fuseki ${FUSEKI_DIR} && \
-    chmod a+x entrypoint.sh 
+    chmod a+x entrypoint.sh
 
 ## Default environment variables.
 ENV \
