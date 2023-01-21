@@ -1,0 +1,5 @@
+#!/bin/bash
+# WF 2023-01-21
+# script to test Jena Dockerfiles
+JENA_VERSION=4.7.0
+docker compose build --build-arg JENA_VERSION=$JENA_VERSION
